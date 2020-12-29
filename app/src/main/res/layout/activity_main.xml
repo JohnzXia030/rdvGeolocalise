@@ -17,11 +17,15 @@
         android:gravity="center|top"
         android:orientation="vertical" >
 
+
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:text="Donner un rendez-vous à:"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Vous pouvez saisir le numéro ou sélectionner le contact auquel vous souhaitez donner un rendez-vous"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,16 +36,58 @@
             <EditText
                 android:layout_width="145dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:background="@drawable/edit_bg"
                 android:layout_marginRight="16dp"
                 />
+            <!--<Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="add"
+                android:onClick="addContact"/>-->
+            <com.example.rdvgeolocalise.MultiSpinner
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/multi_spinner"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/gps"
+                android:background="@drawable/edit_bg"
+                android:text="L'info GPS affiche ici" />
+
+            <Button
+                android:id="@+id/num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Obtenir l'info GPS"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center|top">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="contact"
-                android:onClick="contact"/>
+                android:text="Envoyer"
+                />
+
         </LinearLayout>
+
 
     </LinearLayout>
     <!--<TextView
@@ -56,7 +102,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:gravity="center|center"
         android:orientation="vertical">
 
