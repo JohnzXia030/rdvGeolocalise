@@ -48,12 +48,16 @@ public class PermissionUtils {
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.READ_CONTACTS);
         }
+        //互联网权限
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.INTERNET);
+        }
+
         //申请权限列表中的权限
         if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(activity,
                     permissionList.toArray(new String[permissionList.size()]), 1001);
-        } else {
-            Toast.makeText(context, "多个权限你都有了，不用再次申请", Toast.LENGTH_LONG).show();
         }
     }
 }

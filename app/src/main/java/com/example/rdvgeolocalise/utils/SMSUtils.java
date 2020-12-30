@@ -19,15 +19,14 @@ public class SMSUtils {
 
     //参数为选择的联系人列表
     public void sendLocationAndInvitation(List<String> listContacts, Context context, Location location) {
-
         try{
             for (String contactNumber:
                     listContacts
             ) {
                 StringBuilder sMessage = new StringBuilder();
-                sMessage.append("id:").append(getUUID())
-                        .append("\nLongitude：").append(location.getLongitude())
-                        .append("\nLatitude：").append(location.getLatitude());
+                sMessage.append("Longitude:").append(location.getLongitude()).append(";")
+                        .append("\nLatitude:").append(location.getLatitude());
+
                 System.out.println(sMessage.toString());
                 System.out.println(contactNumber);
                 SmsManager.getDefault().sendTextMessage(contactNumber,null,sMessage.toString(),null,null);
@@ -36,8 +35,28 @@ public class SMSUtils {
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
-
     }
 
+    public void sendReplyAccepted(String numberReply,String msg){
+        try{
+            StringBuilder sMessage = new StringBuilder();
+            sMessage.append(msg)
+                    .append("\nReply:").append("Accepted");
+            SmsManager.getDefault().sendTextMessage(numberReply,null,sMessage.toString(),null,null);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void sendReplyRefused(String numberReply, String msg){
+        try{
+            StringBuilder sMessage = new StringBuilder();
+            sMessage.append(msg)
+                    .append("\nReply:").append("Refused");
+            SmsManager.getDefault().sendTextMessage(numberReply,null,sMessage.toString(),null,null);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 
 }
