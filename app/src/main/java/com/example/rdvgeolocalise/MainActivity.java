@@ -36,7 +36,9 @@ import android.widget.Toast;
 import com.example.rdvgeolocalise.services.SMSReceiver;
 import com.example.rdvgeolocalise.services.SMSService;
 import com.example.rdvgeolocalise.utils.ContactUtil;
+import com.example.rdvgeolocalise.utils.GPSUtils;
 import com.example.rdvgeolocalise.utils.PermissionUtils;
+import com.example.rdvgeolocalise.utils.SMSUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -180,28 +182,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getGps(View view){
+    private Location getGps(View view){
         GPSUtils gpsUtils = GPSUtils.getInstance(this);
         location = gpsUtils.getLocation();
-        return null;
+        return location;
     }
 
     public void sendSms(View view){
+        Location location = getGps(view);
         EditText numberView = (EditText) findViewById(R.id.numEntered);
         String numbers = numberView.getText().toString();
         String[] arrNumber = numbers.split(";");
         String formatedNum;
         for (String num: arrNumber){
-            /*boolean matches =  Pattern.matches(NUM_REGEX, num);
-            toast(num + ">>>>>");
-            if (matches){
-                //enteredNumArray.add(num);
-                toast(num);
-            }*/
-            formatedNum = PhoneNumberUtils.formatNumber(num);
-            toast(formatedNum);
+            if(!num.isEmpty()) {
+                formatedNum = PhoneNumberUtils.formatNumber(num);
+                enteredNumArray.add(formatedNum);
+            }
         }
-       // toast(formatedNum);
+        enteredNumArray.addAll(contactNumArray);
+        SMSUtils smsUtils = new SMSUtils();
+        smsUtils.sendLocationAndInvitation(enteredNumArray,this, location);
     }
     public void toast(String s){
         Toast.makeText(getApplication(),s,Toast.LENGTH_SHORT).show();
