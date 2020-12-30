@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,6 +32,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.rdvgeolocalise.services.SMSReceiver;
+import com.example.rdvgeolocalise.services.SMSService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private static final List<String> contactNumArray = new ArrayList<String>();
     private static final List<String> enteredNumArray = new ArrayList<String>();
     private static final String TAG = MainActivity.class.getSimpleName();
+    IntentFilter filter;
+    SMSReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -109,6 +115,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //启动时添加SMSService
+        filter=new IntentFilter();
+        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
+        receiver=new SMSReceiver();
+        registerReceiver(receiver,filter);//注册广播接收器
+        Intent intent = new Intent(MainActivity.this, SMSService.class);
+        startService(intent);
     }
 
     /**
@@ -157,7 +171,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void toast(String s){
         Toast.makeText(getApplication(),s,Toast.LENGTH_SHORT).show();
     }
+
 }
