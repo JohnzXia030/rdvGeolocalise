@@ -62,15 +62,18 @@ public class GPSUtils {
         Location location = null;
         try {
             if (mContext == null) {
+                System.out.println("mContext为null");
                 return null;
             }
             LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
             if (locationManager == null) {
+                System.out.println("locationManager为null");
                 return null;
             }
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {  //从gps获取经纬度
                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location == null) {//当GPS信号弱没获取到位置的时候再从网络获取
+
                     location = getLocationByNetwork();
                 }
             } else {    //从网络获取经纬度
