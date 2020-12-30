@@ -52,8 +52,6 @@ public class PermissionUtils {
         if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(activity,
                     permissionList.toArray(new String[permissionList.size()]), 1001);
-        } else {
-            Toast.makeText(context, "多个权限你都有了，不用再次申请", Toast.LENGTH_LONG).show();
         }
     }
 }

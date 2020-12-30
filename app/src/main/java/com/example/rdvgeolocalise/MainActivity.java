@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SMSService.class);
         startService(intent);
 
+
+
         //注册通知渠道
         NotificationUtils notificationUtils = new NotificationUtils(this);
         notificationUtils.createNotificationChannels();
