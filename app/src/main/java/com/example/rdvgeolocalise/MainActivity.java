@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private static final List<String> contactNumArray = new ArrayList<String>();
     private static final List<String> enteredNumArray = new ArrayList<String>();
     private static final String TAG = MainActivity.class.getSimpleName();
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -155,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private String getGps(View view){
+        GPSUtils gpsUtils = GPSUtils.getInstance(this);
+        location = gpsUtils.getLocation();
+        return null;
     }
 
     private void toast(String s){

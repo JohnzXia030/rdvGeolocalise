@@ -69,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Obtenir l'info GPS"
+                android:onClick="getGps"
                 android:singleLine="true"/>
         </LinearLayout>
 
