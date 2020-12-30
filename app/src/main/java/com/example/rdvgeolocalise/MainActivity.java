@@ -1,6 +1,7 @@
 package com.example.rdvgeolocalise;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 
@@ -37,6 +39,7 @@ import com.example.rdvgeolocalise.services.SMSReceiver;
 import com.example.rdvgeolocalise.services.SMSService;
 import com.example.rdvgeolocalise.utils.ContactUtil;
 import com.example.rdvgeolocalise.utils.GPSUtils;
+import com.example.rdvgeolocalise.utils.NotificationUtils;
 import com.example.rdvgeolocalise.utils.PermissionUtils;
 import com.example.rdvgeolocalise.utils.SMSUtils;
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     SMSReceiver receiver;
     private Location location;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,48 @@ public class MainActivity extends AppCompatActivity {
          * Load contact info
          */
         setContentView(R.layout.activity_main);
+
+
+        //启动时添加SMSService
+        filter=new IntentFilter();
+        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
+        receiver=new SMSReceiver();
+        registerReceiver(receiver,filter);//注册广播接收器
+        Intent intent = new Intent(MainActivity.this, SMSService.class);
+        startService(intent);
+
+        //注册通知渠道
+        NotificationUtils notificationUtils = new NotificationUtils(this);
+        notificationUtils.createNotificationChannels();
+    }
+
+    /**
+     * 暂时不管
+     * @param view
+     * @throws JSONException
+     */
+    public void addContact(View view) throws JSONException {
+        ContactUtil contactUtil = new ContactUtil(MainActivity.this);
+        /*contactUtil.getContactInfo();
+        getContactInfo();*/
+        Toast.makeText(MainActivity.this,contactUtil.getContactInfo(),Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+
+        intent.setAction(Intent.ACTION_PICK);
+
+        intent.setData(ContactsContract.Contacts.CONTENT_URI);
+
+        startActivityForResult(intent, REQUEST_CONTACT);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Context context = getApplicationContext();
+        PermissionUtils permissionUtils = new PermissionUtils();
+        permissionUtils.request_permissions(context, this);
+
         ContactUtil contactUtil = new ContactUtil(MainActivity.this);
         MultiSpinner multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
         List<String> items = new ArrayList<String>();
@@ -92,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             contactNumArray.clear();
             for (int i = 0; i < items.size(); i++) {
                 if (selected[i]) {
-                   // Toast.makeText(MainActivity.this, items.get(i), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(MainActivity.this, items.get(i), Toast.LENGTH_SHORT).show();
                     String num = items.get(i).substring(items.get(i).lastIndexOf(":") + 1);
                     //Toast.makeText(MainActivity. this, num  , Toast.LENGTH_SHORT).show();
                     contactNumArray.add(num);
@@ -124,44 +170,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //启动时添加SMSService
-        filter=new IntentFilter();
-        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
-        receiver=new SMSReceiver();
-        registerReceiver(receiver,filter);//注册广播接收器
-        Intent intent = new Intent(MainActivity.this, SMSService.class);
-        startService(intent);
-    }
-
-    /**
-     * 暂时不管
-     * @param view
-     * @throws JSONException
-     */
-    public void addContact(View view) throws JSONException {
-        ContactUtil contactUtil = new ContactUtil(MainActivity.this);
-        /*contactUtil.getContactInfo();
-        getContactInfo();*/
-        Toast.makeText(MainActivity.this,contactUtil.getContactInfo(),Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-
-        intent.setAction(Intent.ACTION_PICK);
-
-        intent.setData(ContactsContract.Contacts.CONTENT_URI);
-
-        startActivityForResult(intent, REQUEST_CONTACT);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Context context = getApplicationContext();
-        PermissionUtils permissionUtils = new PermissionUtils();
-        permissionUtils.request_permissions(context, this);
-
-
     }
 
     @Override
@@ -182,8 +190,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Location getGps(View view){
-        GPSUtils gpsUtils = GPSUtils.getInstance(this);
+    public Location getGps(View view){
+        Context context = getApplicationContext();
+        GPSUtils gpsUtils = GPSUtils.getInstance(context);
         location = gpsUtils.getLocation();
         return location;
     }
@@ -204,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         SMSUtils smsUtils = new SMSUtils();
         smsUtils.sendLocationAndInvitation(enteredNumArray,this, location);
     }
+
     public void toast(String s){
         Toast.makeText(getApplication(),s,Toast.LENGTH_SHORT).show();
     }
