@@ -1,4 +1,4 @@
-package com.example.rdvgeolocalise;
+package com.example.rdvgeolocalise.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,6 +32,11 @@ public class PermissionUtils {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.SEND_SMS);
+        }
+        //阅读短信权限
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_SMS);
         }
         //监听收到短信权限
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS)

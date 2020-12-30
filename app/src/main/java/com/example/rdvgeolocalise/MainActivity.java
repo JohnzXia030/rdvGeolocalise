@@ -3,9 +3,9 @@ package com.example.rdvgeolocalise;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
@@ -31,8 +31,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.rdvgeolocalise.services.SMSReceiver;
+import com.example.rdvgeolocalise.services.SMSService;
+import com.example.rdvgeolocalise.utils.ContactUtil;
+import com.example.rdvgeolocalise.utils.PermissionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,46 +58,17 @@ public class MainActivity extends AppCompatActivity {
     private static final List<String> contactNumArray = new ArrayList<String>();
     private static final List<String> enteredNumArray = new ArrayList<String>();
     private static final String TAG = MainActivity.class.getSimpleName();
+    IntentFilter filter;
+    SMSReceiver receiver;
     private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    /**
-     * 暂时不管
-     * @param view
-     * @throws JSONException
-     */
-    public void addContact(View view) throws JSONException {
-        ContactUtil contactUtil = new ContactUtil(MainActivity.this);
-        /*contactUtil.getContactInfo();
-        getContactInfo();*/
-        Toast.makeText(MainActivity.this,contactUtil.getContactInfo(),Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-
-        intent.setAction(Intent.ACTION_PICK);
-
-        intent.setData(ContactsContract.Contacts.CONTENT_URI);
-
-        startActivityForResult(intent, REQUEST_CONTACT);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Context context = getApplicationContext();
-        PermissionUtils permissionUtils = new PermissionUtils();
-        permissionUtils.request_permissions(context, this);
-
-
         /**
          * Load contact info
          */
-
+        setContentView(R.layout.activity_main);
         ContactUtil contactUtil = new ContactUtil(MainActivity.this);
         MultiSpinner multiSpinner = (MultiSpinner) findViewById(R.id.multi_spinner);
         List<String> items = new ArrayList<String>();
@@ -115,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             contactNumArray.clear();
             for (int i = 0; i < items.size(); i++) {
                 if (selected[i]) {
-                    // Toast.makeText(MainActivity.this, items.get(i), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(MainActivity.this, items.get(i), Toast.LENGTH_SHORT).show();
                     String num = items.get(i).substring(items.get(i).lastIndexOf(":") + 1);
                     //Toast.makeText(MainActivity. this, num  , Toast.LENGTH_SHORT).show();
                     contactNumArray.add(num);
@@ -147,6 +122,44 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //启动时添加SMSService
+        filter=new IntentFilter();
+        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
+        receiver=new SMSReceiver();
+        registerReceiver(receiver,filter);//注册广播接收器
+        Intent intent = new Intent(MainActivity.this, SMSService.class);
+        startService(intent);
+    }
+
+    /**
+     * 暂时不管
+     * @param view
+     * @throws JSONException
+     */
+    public void addContact(View view) throws JSONException {
+        ContactUtil contactUtil = new ContactUtil(MainActivity.this);
+        /*contactUtil.getContactInfo();
+        getContactInfo();*/
+        Toast.makeText(MainActivity.this,contactUtil.getContactInfo(),Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+
+        intent.setAction(Intent.ACTION_PICK);
+
+        intent.setData(ContactsContract.Contacts.CONTENT_URI);
+
+        startActivityForResult(intent, REQUEST_CONTACT);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Context context = getApplicationContext();
+        PermissionUtils permissionUtils = new PermissionUtils();
+        permissionUtils.request_permissions(context, this);
+
+
     }
 
     @Override
