@@ -1,4 +1,4 @@
-package com.example.rdvgeolocalise.activities;
+package com.example.rdvgeolocalise;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -9,39 +9,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 
-import android.provider.ContactsContract.CommonDataKinds.Email;
-import android.provider.ContactsContract.CommonDataKinds.Event;
-import android.provider.ContactsContract.CommonDataKinds.Im;
-import android.provider.ContactsContract.CommonDataKinds.Nickname;
-import android.provider.ContactsContract.CommonDataKinds.Note;
-import android.provider.ContactsContract.CommonDataKinds.Organization;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.provider.ContactsContract.CommonDataKinds.Website;
-import android.provider.ContactsContract.Data;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rdvgeolocalise.R;
 import com.example.rdvgeolocalise.services.SMSReceiver;
 import com.example.rdvgeolocalise.services.SMSService;
 import com.example.rdvgeolocalise.utils.ContactUtil;
 import com.example.rdvgeolocalise.utils.GPSUtils;
+import com.example.rdvgeolocalise.utils.NotificationUtils;
 import com.example.rdvgeolocalise.utils.PermissionUtils;
 import com.example.rdvgeolocalise.utils.SMSUtils;
 import com.example.rdvgeolocalise.widgets.MultiSpinner;
@@ -50,12 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CONTACT = 1;
@@ -75,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         //启动时添加SMSService
         filter=new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
@@ -164,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                //toast("Veuillez saisir le(s) numéros sous forms de numéro en'NUM1; NUM2; ...'");
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                toast("Veuillez saisir le(s) numéros sous forms de numéro en 'NUM1; NUM2; ...'");
             }
         });
 
@@ -203,10 +186,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Location getGps(View view){
-        GPSUtils gpsUtils = GPSUtils.getInstance(this);
+        GPSUtils gpsUtils = GPSUtils.getInstance(MainActivity.this);
         Location location = gpsUtils.getLocation();
         TextView gps = (TextView)findViewById(R.id.gps);
-        gps.setText(location.toString());
+        if(location!=null){
+            gps.setText(location.toString());
+        }
+        gps.setText("No info of location");
+
         return location;
     }
 
@@ -226,7 +213,17 @@ public class MainActivity extends AppCompatActivity {
         SMSUtils smsUtils = new SMSUtils();
         smsUtils.sendLocationAndInvitation(enteredNumArray,this, location);
     }
+
+    public void rendezVous(View view){
+        Intent intent = new Intent(this,GestionRendezVous.class);
+        startActivity(intent);
+    }
+
+    public void choisirLocation(View view){
+        Intent intent = new Intent(this, ChoosePositionMapsActivity.class);
+        startActivity(intent);
+    }
     public void toast(String s){
-        Toast.makeText(getApplication(),s,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplication() , s , Toast.LENGTH_SHORT).show();
     }
 }

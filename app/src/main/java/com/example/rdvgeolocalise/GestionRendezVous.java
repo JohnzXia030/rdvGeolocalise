@@ -1,4 +1,4 @@
-package com.example.rdvgeolocalise.activities;
+package com.example.rdvgeolocalise;
 
 import androidx.appcompat.app.AppCompatActivity;
 
