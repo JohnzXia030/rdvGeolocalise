@@ -48,6 +48,12 @@ public class PermissionUtils {
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.READ_CONTACTS);
         }
+        //互联网权限
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.INTERNET);
+        }
+
         //申请权限列表中的权限
         if (!permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(activity,

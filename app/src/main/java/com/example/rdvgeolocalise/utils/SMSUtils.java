@@ -24,8 +24,9 @@ public class SMSUtils {
                     listContacts
             ) {
                 StringBuilder sMessage = new StringBuilder();
-                sMessage.append("Longitude：").append(location.getLongitude())
-                        .append("\nLatitude：").append(location.getLatitude());
+                sMessage.append("Longitude:").append(location.getLongitude()).append(";")
+                        .append("\nLatitude:").append(location.getLatitude());
+
                 System.out.println(sMessage.toString());
                 System.out.println(contactNumber);
                 SmsManager.getDefault().sendTextMessage(contactNumber,null,sMessage.toString(),null,null);

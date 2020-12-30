@@ -1,6 +1,11 @@
 package com.example.rdvgeolocalise;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.rdvgeolocalise.utils.SMSUtils;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity2 extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,5 +72,4 @@ public class MainActivity2 extends AppCompatActivity {
         newIntent.putExtra("LOCATION", location);
         startActivity(newIntent);
     }
-
 }
