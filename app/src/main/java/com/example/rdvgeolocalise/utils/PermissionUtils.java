@@ -1,4 +1,4 @@
-package com.example.rdvgeolocalise;
+package com.example.rdvgeolocalise.utils;
 
 import android.Manifest;
 import android.app.Activity;

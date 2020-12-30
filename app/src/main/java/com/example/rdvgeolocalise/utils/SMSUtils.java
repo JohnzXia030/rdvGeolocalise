@@ -1,14 +1,12 @@
-package com.example.rdvgeolocalise;
+package com.example.rdvgeolocalise.utils;
 
 import android.content.Context;
 import android.location.Location;
 import android.telephony.SmsManager;
-import android.widget.Toast;
 
-import java.math.BigDecimal;
+import com.example.rdvgeolocalise.utils.GPSUtils;
+
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SMSUtils {
     //参数为选择的联系人列表

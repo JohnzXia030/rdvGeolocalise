@@ -1,4 +1,4 @@
-package com.example.rdvgeolocalise;
+package com.example.rdvgeolocalise.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -41,7 +41,7 @@ public class GPSUtils {
     };
 
 
-    private GPSUtils(Context context) {
+    GPSUtils(Context context) {
         this.mContext = context;
     }
 

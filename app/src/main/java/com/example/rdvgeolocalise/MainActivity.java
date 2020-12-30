@@ -3,46 +3,30 @@ package com.example.rdvgeolocalise;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 
-import android.provider.ContactsContract.CommonDataKinds.Email;
-import android.provider.ContactsContract.CommonDataKinds.Event;
-import android.provider.ContactsContract.CommonDataKinds.Im;
-import android.provider.ContactsContract.CommonDataKinds.Nickname;
-import android.provider.ContactsContract.CommonDataKinds.Note;
-import android.provider.ContactsContract.CommonDataKinds.Organization;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.provider.ContactsContract.CommonDataKinds.Website;
-import android.provider.ContactsContract.Data;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.rdvgeolocalise.services.SMSReceiver;
 import com.example.rdvgeolocalise.services.SMSService;
+import com.example.rdvgeolocalise.utils.ContactUtil;
+import com.example.rdvgeolocalise.utils.PermissionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CONTACT = 1;
@@ -151,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         PermissionUtils permissionUtils = new PermissionUtils();
         permissionUtils.request_permissions(context, this);
+
+
     }
 
     @Override
