@@ -184,9 +184,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1001:
                 if (grantResults.length > 0) {
-                    // 因为是多个权限，所以需要一个循环获取每个权限的获取情况
                     for (int i = 0; i < grantResults.length; i++) {
-                        // PERMISSION_DENIED 这个值代表是没有授权，我们可以把被拒绝授权的权限显示出来
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED){
                             Toast.makeText(MainActivity.this, permissions[i] + "permission has been denied", Toast.LENGTH_SHORT).show();
                         }

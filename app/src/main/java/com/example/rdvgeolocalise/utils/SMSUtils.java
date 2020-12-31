@@ -17,7 +17,6 @@ public class SMSUtils {
         return uuidStr;
     }
 
-    //参数为选择的联系人列表
     public void sendLocationAndInvitation(List<String> listContacts, Context context, Location location) {
         try{
             for (String contactNumber:
