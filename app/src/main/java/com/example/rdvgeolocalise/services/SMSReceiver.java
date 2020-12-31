@@ -11,22 +11,39 @@ import androidx.annotation.RequiresApi;
 
 import com.example.rdvgeolocalise.utils.NotificationUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SMSReceiver extends BroadcastReceiver {
+
+    public static final List<String> invitationAccepted = new ArrayList<>();
+    public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
-        String smsBody = getMsg(intent);
-        String sender = getSender(intent);
-        if(isReply(smsBody)){
+        String smsBody;
+        String sender;
+
+        if (SMS_RECEIVED.equals(intent.getAction())) {
+            smsBody = getMsg(intent);
+            sender = getSender(intent);
+            if(isReply(smsBody)){
+                if (smsBody.contains("Accepted")){
+                    invitationAccepted.add(smsBody);
+                    System.out.println(invitationAccepted.size());
+                }
                 NotificationUtils notificationUtils = new NotificationUtils(context);
                 notificationUtils.sendReplyMsg(smsBody, sender);
-        } else {
-            if(isLocation(smsBody)){
-                NotificationUtils notificationUtils = new NotificationUtils(context);
-                notificationUtils.sendInvitationMsg(smsBody, sender);
+            } else {
+                if(isLocation(smsBody)){
+                    NotificationUtils notificationUtils = new NotificationUtils(context);
+                    notificationUtils.sendInvitationMsg(smsBody, sender);
+                }
             }
         }
+
 
     }
 

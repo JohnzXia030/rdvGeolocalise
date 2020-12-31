@@ -40,7 +40,6 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/Theme.RdvGeolocalise.NoActionBar" />
         <activity android:name=".GestionRendezVous" />
-        <activity android:name=".addContactActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

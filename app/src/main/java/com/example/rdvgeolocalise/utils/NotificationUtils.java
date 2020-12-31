@@ -31,7 +31,7 @@ public class NotificationUtils {
     public void createNotificationChannels(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "invitation";
-            String channelName = "约会邀请";
+            String channelName = "Appointment invitation";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(channelId,channelName,importance);
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -45,7 +45,7 @@ public class NotificationUtils {
         NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("您收到一条约会邀请，位于：\n").append(location);
+        stringBuilder.append("You have received an invitation of an appointment，located at:\n").append(location);
 
         Intent intentClick =new Intent (context, NotificationClickReceiver.class);
         intentClick.setAction("notification_clicked");
@@ -54,16 +54,16 @@ public class NotificationUtils {
         PendingIntent pendingIntentClick =PendingIntent.getBroadcast(context, 1003, intentClick, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "invitation")
-                .setContentTitle("收到一条邀请")
-                .setContentText("您收到一条来自："+ initiator +"\n的约会邀请，请点击于应用内查看")
+                .setContentTitle("Appointment invitation")
+                .setContentText("You have received an invitation of an appointment from: "+ initiator +"\n, please click to check it in the application!")
                 .setSmallIcon(R.drawable.edit_bg)
                 .setContentIntent(pendingIntentClick)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true);
 
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle("收到一条邀请")
-                .bigText("您收到一条来自："+ initiator +"\n的约会邀请，位于：\n"+ location +"\n请点击于应用内查看");
+        bigTextStyle.setBigContentTitle("Appointment invitation")
+                .bigText("You have received an invitation of an appointment from: "+ initiator +"\n, located at: \n"+ location +"\n, please click to check it in the application!");
         builder.setStyle(bigTextStyle);
 
 
@@ -76,15 +76,15 @@ public class NotificationUtils {
         NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "invitation")
-                .setContentTitle("收到一条回复")
-                .setContentText("您收到一条来自："+ replier +"\n的邀请回复，位于：\n"+ msg)
+                .setContentTitle("Invitation reply")
+                .setContentText("You have received a reply of an invitation from: "+ replier +"\n, located at:\n"+ msg)
                 .setSmallIcon(R.drawable.edit_bg)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true);
 
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
-        bigTextStyle.setBigContentTitle("收到一条回复")
-                .bigText("您收到一条来自："+ replier +"\n的邀请回复，位于：\n"+ msg);
+        bigTextStyle.setBigContentTitle("Invitation reply")
+                .bigText("You have received a reply of an invitation from: "+ replier +"\n, located at:\n"+ msg);
         builder.setStyle(bigTextStyle);
 
         Notification notification = builder.build();

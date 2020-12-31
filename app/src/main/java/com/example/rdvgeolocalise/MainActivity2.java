@@ -50,18 +50,18 @@ public class MainActivity2 extends AppCompatActivity {
     public void acceptInvitation(View view){
         Intent intent =getIntent();
         SMSUtils smsUtils = new SMSUtils();
-        System.out.println("接收邀请");
+        System.out.println("Accept invitation");
         smsUtils.sendReplyAccepted(intent.getStringExtra("INITIATOR"),intent.getStringExtra("LOCATION"));
-        Toast.makeText(this, "消息已发送", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Message has been send!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(MainActivity2.this, MainActivity.class));
     }
 
     public void refuseInvitation(View view){
         Intent intent =getIntent();
         SMSUtils smsUtils = new SMSUtils();
-        System.out.println("拒绝邀请");
+        System.out.println("Refuse invitation");
         smsUtils.sendReplyRefused(intent.getStringExtra("INITIATOR"),intent.getStringExtra("LOCATION"));
-        Toast.makeText(this, "消息已发送", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Message has been send!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(MainActivity2.this, MainActivity.class));
     }
 

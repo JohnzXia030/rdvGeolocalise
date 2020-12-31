@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private static final List<String> contactNumArray = new ArrayList<String>();
     private static final List<String> enteredNumArray = new ArrayList<String>();
     private static final String TAG = MainActivity.class.getSimpleName();
-    IntentFilter filter;
-    SMSReceiver receiver;
+
     private static Location location ;
+    private SMSReceiver mSmsReceiver;
+
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -61,23 +62,16 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Obtenir les coordonness de GPS
          */
-        Intent intent1 = this.getIntent();
-        /*Bundle bundle = this.getIntent().getExtras();
-        if (bundle!=null) {*/
-        toast(String.valueOf(intent1.getDoubleExtra("lat",0 )));
-            location = new Location("");
-            location.setLatitude(intent1.getDoubleExtra("lat",0 ));
-            location.setLongitude(intent1.getDoubleExtra("lng",0 ));
-            TextView gps = (TextView) findViewById(R.id.gps);
-            gps.setText("Lat:");
-            gps.setText("Lat:" + location.getLatitude() + "Lng" + location.getLongitude());
+
 
 
         //启动时添加SMSService
-        filter=new IntentFilter();
-        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
-        receiver=new SMSReceiver();
-        registerReceiver(receiver,filter);//注册广播接收器
+
+        mSmsReceiver = new SMSReceiver();
+        IntentFilter smsfilter = new IntentFilter(SMSReceiver.SMS_RECEIVED);
+        smsfilter.setPriority(2147483647);
+        registerReceiver(mSmsReceiver, smsfilter);
+
         Intent intent = new Intent(MainActivity.this, SMSService.class);
         startService(intent);
 
@@ -171,13 +165,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //启动时添加SMSService
-        filter=new IntentFilter();
-        filter.addAction("android.provider.Telephony.SMS_RECEIVED" );
-        receiver=new SMSReceiver();
-        registerReceiver(receiver,filter);//注册广播接收器
-        Intent intent = new Intent(MainActivity.this, SMSService.class);
-        startService(intent);
+        Intent intent1 = this.getIntent();
+        /*Bundle bundle = this.getIntent().getExtras();
+        if (bundle!=null) {*/
+        location = new Location("");
+        location.setLatitude(intent1.getDoubleExtra("lat",0 ));
+        location.setLongitude(intent1.getDoubleExtra("lng",0 ));
+        TextView gps = (TextView) findViewById(R.id.gps);
+
+        gps.setText("Lat:" + location.getLatitude() + "\nLng:" + location.getLongitude());
     }
 
 
@@ -192,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < grantResults.length; i++) {
                         // PERMISSION_DENIED 这个值代表是没有授权，我们可以把被拒绝授权的权限显示出来
                         if (grantResults[i] == PackageManager.PERMISSION_DENIED){
-                            Toast.makeText(MainActivity.this, permissions[i] + "权限被拒绝了", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, permissions[i] + "permission has been denied", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -205,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         location = gpsUtils.getLocation();
         TextView gps = (TextView)findViewById(R.id.gps);
         if(location!=null){
-            gps.setText("Lat:" + location.getLatitude() + ";Lng" + location.getLongitude());
+            gps.setText("Lat:" + location.getLatitude() + ";\nLng" + location.getLongitude());
         } else {
             gps.setText("No info of location");
         }
@@ -213,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendSms(View view){
-        location = getGps(view);
         EditText numberView = (EditText) findViewById(R.id.numEntered);
         String numbers = numberView.getText().toString();
         String[] arrNumber = numbers.split(";");

@@ -18,7 +18,7 @@ public class NotificationClickReceiver extends BroadcastReceiver {
             StringBuilder viewMsgBuilder = new StringBuilder();
             String initiator = intent.getStringExtra("INITIATOR");
             String location = intent.getStringExtra("LOCATION");
-            viewMsgBuilder.append("您收到一条来自："+ initiator +"\n的约会邀请，位于：\n")
+            viewMsgBuilder.append("You have received an invitation of an appointment from："+ initiator +"\nlocated at：\n")
                     .append(location);
             String viewMsg = viewMsgBuilder.toString();
             Intent newIntent = new Intent(context, MainActivity2.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
