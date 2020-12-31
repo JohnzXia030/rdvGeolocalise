@@ -5,7 +5,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -14,6 +18,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +46,7 @@ public class ChoosePositionMapsActivity extends FragmentActivity implements OnMa
     private Location mLastLocation;
     Marker mCurrLocationMarker;
     Marker mChosenMarker;
+    public Context context;
     LocationRequest mLocationRequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,6 @@ public class ChoosePositionMapsActivity extends FragmentActivity implements OnMa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
     }
 
@@ -70,8 +75,21 @@ public class ChoosePositionMapsActivity extends FragmentActivity implements OnMa
 
             @Override
             public void onMapClick(LatLng latLng) {
-                Toast.makeText(getApplication() , latLng.toString() , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplication() , latLng.toString() , Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChoosePositionMapsActivity.this);
+                builder.setMessage("Voulez-vous utiliser cette position? " + "\n" +"Lat:" + latLng.latitude + "Lng" + latLng.longitude);
+                builder.setPositiveButton("Oui", (dialog, which) -> {
+                    Intent intent = new Intent(ChoosePositionMapsActivity.this, MainActivity.class);
+                    intent.putExtra("lat",latLng.latitude);
+                    intent.putExtra("lng",latLng.longitude);
+                    //Toast.makeText(getApplication() ,String.valueOf(intent.getExtras().getDouble("lat")),Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
 
+                });
+                builder.setNegativeButton("Non", (dialog, which) -> {
+                    return;
+                });
+                builder.show();
             }
         });
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

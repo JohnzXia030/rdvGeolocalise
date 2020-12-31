@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -49,13 +50,27 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     IntentFilter filter;
     SMSReceiver receiver;
-    private Location location;
+    private static Location location ;
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /**
+         * Obtenir les coordonness de GPS
+         */
+        Intent intent1 = this.getIntent();
+        /*Bundle bundle = this.getIntent().getExtras();
+        if (bundle!=null) {*/
+        toast(String.valueOf(intent1.getDoubleExtra("lat",0 )));
+            location = new Location("");
+            location.setLatitude(intent1.getDoubleExtra("lat",0 ));
+            location.setLongitude(intent1.getDoubleExtra("lng",0 ));
+            TextView gps = (TextView) findViewById(R.id.gps);
+            gps.setText("Lat:");
+            gps.setText("Lat:" + location.getLatitude() + "Lng" + location.getLongitude());
 
 
         //启动时添加SMSService
@@ -65,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver,filter);//注册广播接收器
         Intent intent = new Intent(MainActivity.this, SMSService.class);
         startService(intent);
-
-
 
         //注册通知渠道
         NotificationUtils notificationUtils = new NotificationUtils(this);
@@ -189,18 +202,18 @@ public class MainActivity extends AppCompatActivity {
 
     public Location getGps(View view){
         GPSUtils gpsUtils = GPSUtils.getInstance(MainActivity.this);
-        Location location = gpsUtils.getLocation();
+        location = gpsUtils.getLocation();
         TextView gps = (TextView)findViewById(R.id.gps);
         if(location!=null){
-            gps.setText(location.toString());
+            gps.setText("Lat:" + location.getLatitude() + ";Lng" + location.getLongitude());
+        } else {
+            gps.setText("No info of location");
         }
-        gps.setText("No info of location");
-
         return location;
     }
 
     public void sendSms(View view){
-        Location location = getGps(view);
+        location = getGps(view);
         EditText numberView = (EditText) findViewById(R.id.numEntered);
         String numbers = numberView.getText().toString();
         String[] arrNumber = numbers.split(";");
